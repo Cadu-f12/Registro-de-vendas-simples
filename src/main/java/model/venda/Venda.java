@@ -1,5 +1,6 @@
 package model.venda;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Venda {
@@ -29,8 +30,19 @@ public class Venda {
         return this.data.getDataDaVenda();
     }
 
+    public Pagamento getFormaPagamento() {
+        return this.formaPagamento;
+    }
+
     public int getQuantidade() {
         return this.quantidade.getQuantidade();
+    }
+
+    public String getNomeProduto() {
+        return this.produto.getNome();
+    }
+    public BigDecimal getPrecoProduto() {
+        return this.produto.getPreco();
     }
 
 }
