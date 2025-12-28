@@ -34,6 +34,10 @@ public class Venda {
         return this.formaPagamento;
     }
 
+    public Vendedor getNomeVendedor() {
+        return this.nomeVendedor;
+    }
+
     public int getQuantidade() {
         return this.quantidade.getQuantidade();
     }
