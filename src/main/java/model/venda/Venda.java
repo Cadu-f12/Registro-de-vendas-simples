@@ -1,5 +1,6 @@
 package model.venda;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Venda {
@@ -24,4 +25,9 @@ public class Venda {
     public int getId() {
         return this.id.getId();
     }
+
+    public LocalDate getData() {
+        return this.data.getDataDaVenda();
+    }
+
 }
