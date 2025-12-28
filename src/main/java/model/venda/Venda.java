@@ -45,9 +45,6 @@ public class Venda {
     public String getNomeProduto() {
         return this.produto.getNome();
     }
-    public BigDecimal getPrecoProduto() {
-        return this.produto.getPreco();
-    }
 
     public BigDecimal getTotal() {
         return this.total.getTotal();
