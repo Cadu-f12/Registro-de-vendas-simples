@@ -1,4 +1,4 @@
-package model;
+package model.venda;
 
 import java.util.Date;
 
@@ -19,5 +19,9 @@ public class Venda {
         this.quantidade = quantidade;
         this.produto = produto;
         this.total = total;
+    }
+
+    public int getId() {
+        return this.id.getId();
     }
 }
