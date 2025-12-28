@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class Venda {
     private final Id id;
-    private final Date data;
+    private final DataVenda data;
     private final Pagamento formaPagamento;
     private final Vendedor nomeVendedor;
     private final Quantidade quantidade;
     private final Produto produto;
     private final Total total;
 
-    public Venda(Id id, Date data, Pagamento formaPagamento, Vendedor nomeVendedor, Quantidade quantidade, Produto produto, Total total) {
+    public Venda(Id id, DataVenda data, Pagamento formaPagamento, Vendedor nomeVendedor, Quantidade quantidade, Produto produto, Total total) {
         this.id = id;
         this.data = data;
         this.formaPagamento = formaPagamento;
