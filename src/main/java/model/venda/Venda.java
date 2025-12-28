@@ -49,4 +49,7 @@ public class Venda {
         return this.produto.getPreco();
     }
 
+    public BigDecimal getTotal() {
+        return this.total.getTotal();
+    }
 }
