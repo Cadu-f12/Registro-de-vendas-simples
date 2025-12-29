@@ -1,5 +1,7 @@
 package view;
 
+import controller.VendaController;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -89,7 +91,7 @@ public class JanelaCadastroVenda extends JDialog {
         btnCancelar.setPreferredSize(new Dimension(180, 40));
 
         btnCancelar.addActionListener(e -> dispose());
-//        btnConfirmar.addActionListener(e -> );
+        btnConfirmar.addActionListener(e -> registrarVenda());
 
         painelBotoes.add(btnConfirmar);
         painelBotoes.add(btnCancelar);
@@ -146,6 +148,28 @@ public class JanelaCadastroVenda extends JDialog {
         } catch (NumberFormatException ex) {
             // Se o usuário digitar letras ou algo inválido, limpa o total ou mostra erro
             txtTotal.setText("Erro no valor");
+        }
+    }
+
+    private void registrarVenda() {
+        try {
+            VendaController vendaController = new VendaController();
+
+            vendaController.registrarVenda(txtFormaPagamento.getText(), txtVendedor.getText(), txtQuantidade.getText(), txtProduto.getText(), txtPreco.getText());
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Venda registrada com sucesso!",
+                    "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Erro ao registrar a venda.\n" + e.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 }
