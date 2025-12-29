@@ -7,6 +7,10 @@ public class Produto {
     private final BigDecimal preco;
 
     public Produto(String nome, BigDecimal preco) {
+        validarNomeVazio(nome);
+        validarTamanhoNome(nome);
+        validarPrecoVazio(preco);
+        validarPrecoZerado(preco);
 
         this.nome = nome;
         this.preco = preco;
