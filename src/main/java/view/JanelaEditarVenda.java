@@ -55,7 +55,7 @@ public class JanelaEditarVenda extends JDialog {
         gbcR.fill = GridBagConstraints.HORIZONTAL;
         gbcR.weightx = 1.0;
 
-        String[] labels = {"Produto:", "Vendedor:", "Quantidade:", "Forma Pagamento:", "Total:"};
+        String[] labels = {"Produto:", "Vendedor:", "Quantidade:", "Forma de Pagamento:", "Total:"};
         JTextField[] campos = {
                 txtProduto = new JTextField(),
                 txtVendedor = new JTextField(),
