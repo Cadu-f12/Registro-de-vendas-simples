@@ -7,8 +7,11 @@ public class Produto {
     private final BigDecimal preco;
 
     public Produto(String nome, BigDecimal preco) {
+        // Validações nome do produto
+        validarSimbulos(nome);
         validarNomeVazio(nome);
         validarTamanhoNome(nome);
+        // Validações preço
         validarPrecoVazio(preco);
         validarPrecoZerado(preco);
 
@@ -16,6 +19,11 @@ public class Produto {
         this.preco = preco;
     }
 
+    private void validarSimbulos(String nome) {
+        if(!nome.matches("^[a-z ]+$")) {
+            throw new AtributoComSimbulosException("nome inválido: nome com simbolos ou números");
+        }
+    }
     private void validarNomeVazio(String nome) {
         if (nome == null || nome.isEmpty()) {
             throw new AtributoVazioException("nome inválido: atributo vazio ou nulo");
