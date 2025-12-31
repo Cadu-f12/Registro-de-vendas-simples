@@ -12,7 +12,7 @@ public class VendaDAO {
         ConversorVenda conversorVenda = new ConversorVenda(venda);
 
         String sql = """
-                    INSERT INTO vendas (data, pagamento, vendedor, quantidade, produto, total)
+                    INSERT INTO vendas (data_registro, forma_pagamento, nome_vendedor, quantidade, nome_produto, total)
                     VALUES (?, ?, ?, ?, ?, ?)""";
 
         try (Connection conn = Conexao.getConnection();
