@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 
 public class VendaController {
     public void registrarVenda(VendaReplace vendaReplace) {
-        // Tratar exceções
-        // Tratar mensagens vindas do service
 
         Pagamento novoPagamento = Pagamento.valueOf(vendaReplace.getPagamento().toLowerCase());
         Vendedor novoVendedor = Vendedor.valueOf(vendaReplace.getVendedor().toLowerCase());

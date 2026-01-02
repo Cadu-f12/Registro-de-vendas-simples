@@ -14,17 +14,14 @@ public class JanelaCadastroVenda extends JDialog {
 
     private JTextField txtQuantidade, txtProduto, txtPreco, txtTotal;
     private JButton btnConfirmar, btnCancelar;
-
-    // Grupos para as opções de seleção
     private ButtonGroup grupoPagamento, grupoVendedor;
 
     public JanelaCadastroVenda(Frame parent) {
         super(parent, "Registrar Nova Venda", true);
-        setSize(700, 550); // Ajuste de altura para acomodar o layout vertical
+        setSize(700, 550);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        // --- PAINEL DO FORMULÁRIO ---
         JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBorder(BorderFactory.createTitledBorder("Dados da Venda"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -33,7 +30,7 @@ public class JanelaCadastroVenda extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
 
-        // 1. FORMA DE PAGAMENTO (Radio Buttons)
+        // 1. FORMA DE PAGAMENTO
         gbc.gridx = 0; gbc.gridy = 0;
         painelFormulario.add(new JLabel("Forma de Pagamento:"), gbc);
 
@@ -44,12 +41,12 @@ public class JanelaCadastroVenda extends JDialog {
             JRadioButton rb = new JRadioButton(opt);
             grupoPagamento.add(rb);
             pnlPagamento.add(rb);
-            if(opt.equals("PIX")) rb.setSelected(true); // Seleção padrão
+            if(opt.equals("PIX")) rb.setSelected(true);
         }
         gbc.gridy = 1;
         painelFormulario.add(pnlPagamento, gbc);
 
-        // 2. VENDEDOR (Radio Buttons)
+        // 2. VENDEDOR
         gbc.gridx = 0; gbc.gridy = 2;
         painelFormulario.add(new JLabel("Vendedor que fez a venda:"), gbc);
 
@@ -60,19 +57,19 @@ public class JanelaCadastroVenda extends JDialog {
             JRadioButton rb = new JRadioButton(v);
             grupoVendedor.add(rb);
             pnlVendedor.add(rb);
-            if(v.equals("Carlos")) rb.setSelected(true); // Seleção padrão
+            if(v.equals("Carlos")) rb.setSelected(true);
         }
         gbc.gridy = 3;
         painelFormulario.add(pnlVendedor, gbc);
 
-        // 3. PRODUTO (Largura total)
+        // 3. PRODUTO
         gbc.gridx = 0; gbc.gridy = 4;
         painelFormulario.add(new JLabel("Nome do produto:"), gbc);
         gbc.gridy = 5;
         txtProduto = new JTextField();
         painelFormulario.add(txtProduto, gbc);
 
-        // 4. QUANTIDADE E PREÇO (Lado a lado)
+        // 4. QUANTIDADE E PREÇO
         JPanel pnlNumerico = new JPanel(new GridLayout(2, 2, 10, 5));
         pnlNumerico.add(new JLabel("Quantidade que foi vendida:"));
         pnlNumerico.add(new JLabel("Preço do produto:"));
@@ -85,7 +82,7 @@ public class JanelaCadastroVenda extends JDialog {
         gbc.gridy = 6;
         painelFormulario.add(pnlNumerico, gbc);
 
-        // 5. TOTAL (Lá embaixo e centralizado)
+        // 5. TOTAL
         JPanel pnlTotal = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel lblTotal = new JLabel("Total: ");
         lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
@@ -94,7 +91,7 @@ public class JanelaCadastroVenda extends JDialog {
         txtTotal.setFocusable(false);
         txtTotal.setHorizontalAlignment(JTextField.CENTER);
         txtTotal.setFont(new Font("Arial", Font.BOLD, 18));
-        txtTotal.setBackground(new Color(230, 230, 230)); // Destaque visual
+        txtTotal.setBackground(new Color(230, 230, 230));
 
         pnlTotal.add(lblTotal);
         pnlTotal.add(txtTotal);
@@ -105,10 +102,8 @@ public class JanelaCadastroVenda extends JDialog {
 
         add(painelFormulario, BorderLayout.CENTER);
 
-        // Configuração de cálculo
         configurarCalculoAutomatico();
 
-        // --- PAINEL INFERIOR (BOTÕES) ---
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         btnConfirmar = new JButton("Confirmar Registro");
         btnCancelar = new JButton("Cancelar Registro");
@@ -149,35 +144,47 @@ public class JanelaCadastroVenda extends JDialog {
         }
     }
 
-    // Auxiliar para pegar o texto do Radio Button selecionado
     private String getSelectedButtonText(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
             if (button.isSelected()) return button.getText();
         }
-        return "";
+        return null; // Retorna null se nada estiver selecionado
+    }
+
+    /**
+     * Método auxiliar para converter Strings vazias em null.
+     */
+    private String stringOrNull(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return null;
+        }
+        return input.trim();
     }
 
     private void registrarVenda() {
         try {
+            // Captura e converte para NULL se estiver vazio
+            String pagamento = stringOrNull(getSelectedButtonText(grupoPagamento));
+            String vendedor = stringOrNull(getSelectedButtonText(grupoVendedor));
+            String quantidade = stringOrNull(txtQuantidade.getText());
+            String produto = stringOrNull(txtProduto.getText());
+            String preco = stringOrNull(txtPreco.getText());
 
-
-            // Pegando os valores dos RadioButtons e Fields
-            String pagamento = getSelectedButtonText(grupoPagamento);
-            String vendedor = getSelectedButtonText(grupoVendedor);
-
-            VendaReplace vendaReplace = new VendaReplace(pagamento, vendedor, txtQuantidade.getText(), txtProduto.getText(), txtPreco.getText());
-
+            // Registrar venda
+            VendaReplace vendaReplace = new VendaReplace(pagamento, vendedor, quantidade, produto, preco);
             VendaController vendaController = new VendaController();
             vendaController.registrarVenda(vendaReplace);
 
+            // Mensagem de sucesso e limpar os campos após sucesso
             JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            //Limpar campos após sucesso
             txtQuantidade.setText("");
             txtPreco.setText("");
             txtProduto.setText("");
+            txtTotal.setText("");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            MensagemErro mensagemErro = new MensagemErro(e);
+            JOptionPane.showMessageDialog(this, mensagemErro.getMensagem(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
