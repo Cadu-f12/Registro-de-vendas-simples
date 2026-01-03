@@ -6,8 +6,8 @@ public class DataVenda {
     private final LocalDate dataDaVenda;
 
     public DataVenda(LocalDate dataDaVenda) {
-        validarDataFutura(dataDaVenda);
         validarDataVazia(dataDaVenda);
+        validarDataFutura(dataDaVenda);
 
         this.dataDaVenda = dataDaVenda;
     }

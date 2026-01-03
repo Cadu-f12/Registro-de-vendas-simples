@@ -7,12 +7,12 @@ import model.venda.Vendedor;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class ConversorVenda {
+public class ConversorDeDados {
     private final Date novaData;
     private final String novoPagamento;
     private final String novoVendedor;
 
-    public ConversorVenda(Venda venda) {
+    public ConversorDeDados(Venda venda) {
         this.novaData = converterData(venda.getData());
         this.novoPagamento = converterPagamento(venda.getFormaPagamento());
         this.novoVendedor = converterVendedor(venda.getNomeVendedor());

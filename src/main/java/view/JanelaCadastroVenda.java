@@ -1,7 +1,6 @@
 package view;
 
 import controller.VendaController;
-import controller.VendaReplace;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -172,9 +171,8 @@ public class JanelaCadastroVenda extends JDialog {
             String preco = stringOrNull(txtPreco.getText());
 
             // Registrar venda
-            VendaReplace vendaReplace = new VendaReplace(pagamento, vendedor, quantidade, produto, preco);
             VendaController vendaController = new VendaController();
-            vendaController.registrarVenda(vendaReplace);
+            vendaController.registrarVenda(pagamento, vendedor, quantidade, produto, preco);
 
             // Mensagem de sucesso e limpar os campos após sucesso
             JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);

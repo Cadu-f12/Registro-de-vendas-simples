@@ -8,8 +8,8 @@ public class Produto {
 
     public Produto(String nome, BigDecimal preco) {
         // Validações nome do produto
-        validarSimbulos(nome);
         validarNomeVazio(nome);
+        validarSimbulos(nome);
         validarTamanhoNome(nome);
         // Validações preço
         validarPrecoVazio(preco);
