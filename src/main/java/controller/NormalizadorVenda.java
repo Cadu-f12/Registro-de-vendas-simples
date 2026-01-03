@@ -14,7 +14,7 @@ public class NormalizadorVenda {
         Adaptar Enum, remover acentos, substituir virgula por ponto,
         normalizar dados deixando tudo em lowerCase e tirando espaços adjacentes
          */
-        this.pagamento = adaptarEnum(normalizarString(inPagamento));
+        this.pagamento = adaptarEnum(removerAcentos(normalizarString(inPagamento)));
         this.vendedor = removerAcentos(normalizarString(inVendedor));
         this.quantidade = normalizarString(inQuantidade);
         this.produto = removerAcentos(normalizarString(inProduto));
@@ -23,9 +23,9 @@ public class NormalizadorVenda {
     }
 
     private String adaptarEnum(String enumInvalido) {
-        if (removerAcentos(enumInvalido).equals("Cartao de credito")) {
+        if (removerAcentos(enumInvalido).equals("cartao de credito")) {
             return "cartao_credito";
-        } else if (removerAcentos(enumInvalido).equals("Cartao de debito")) {
+        } else if (removerAcentos(enumInvalido).equals("cartao de debito")) {
             return "cartao_debito";
         } else {
             return removerAcentos(enumInvalido);

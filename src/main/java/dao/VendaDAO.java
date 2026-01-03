@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 public class VendaDAO {
 
     public void registrarVenda(Venda venda) {
+        // Converter dados para tipos especificos do DataBase
         ConversorDeDados conversorDeDados = new ConversorDeDados(venda);
 
         String sql = """
@@ -29,5 +30,4 @@ public class VendaDAO {
             throw new RuntimeException(e);
         }
     }
-
 }
