@@ -14,6 +14,8 @@ public class JanelaCadastroVenda extends JDialog {
     private JTextField txtQuantidade, txtProduto, txtPreco, txtTotal;
     private JButton btnConfirmar, btnCancelar;
     private ButtonGroup grupoPagamento, grupoVendedor;
+    // Formatador padronizado para ser usado em todo o código
+    private final DecimalFormat df = new DecimalFormat("R$ #,##0.00");
 
     public JanelaCadastroVenda(Frame parent) {
         super(parent, "Registrar Nova Venda", true);
@@ -71,7 +73,7 @@ public class JanelaCadastroVenda extends JDialog {
         // 4. QUANTIDADE E PREÇO
         JPanel pnlNumerico = new JPanel(new GridLayout(2, 2, 10, 5));
         pnlNumerico.add(new JLabel("Quantidade que foi vendida:"));
-        pnlNumerico.add(new JLabel("Preço do produto:"));
+        pnlNumerico.add(new JLabel("Preço do produto (Unitario):"));
 
         txtQuantidade = new JTextField();
         txtPreco = new JTextField();
@@ -85,7 +87,9 @@ public class JanelaCadastroVenda extends JDialog {
         JPanel pnlTotal = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel lblTotal = new JLabel("Total: ");
         lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
-        txtTotal = new JTextField(10);
+
+        // --- AJUSTE: Iniciando com R$ 0,00 ---
+        txtTotal = new JTextField("R$ 0,00", 10);
         txtTotal.setEditable(false);
         txtTotal.setFocusable(false);
         txtTotal.setHorizontalAlignment(JTextField.CENTER);
@@ -119,17 +123,9 @@ public class JanelaCadastroVenda extends JDialog {
         add(painelBotoes, BorderLayout.SOUTH);
     }
 
-    /**
-     * Configura o comportamento da tecla Enter nos campos de texto.
-     */
     private void configurarNavegacaoEnter() {
-        // Ao apertar Enter no Produto -> vai para Quantidade
         txtProduto.addActionListener(e -> txtQuantidade.requestFocusInWindow());
-
-        // Ao apertar Enter na Quantidade -> vai para o Preço
         txtQuantidade.addActionListener(e -> txtPreco.requestFocusInWindow());
-
-        // Ao apertar Enter no Preço (último campo) -> Confirma a venda
         txtPreco.addActionListener(e -> registrarVenda());
     }
 
@@ -147,12 +143,14 @@ public class JanelaCadastroVenda extends JDialog {
         try {
             String qtdStr = txtQuantidade.getText().replace(",", ".");
             String precoStr = txtPreco.getText().replace(",", ".");
+
+            // --- AJUSTE: Se campos vazios, volta para R$ 0,00 ---
             if (qtdStr.isEmpty() || precoStr.isEmpty()) {
-                txtTotal.setText("");
+                txtTotal.setText("R$ 0,00");
                 return;
             }
+
             double total = Double.parseDouble(qtdStr) * Double.parseDouble(precoStr);
-            DecimalFormat df = new DecimalFormat("R$ #,##0.00");
             txtTotal.setText(df.format(total));
         } catch (NumberFormatException ex) {
             txtTotal.setText("Erro");
@@ -176,24 +174,24 @@ public class JanelaCadastroVenda extends JDialog {
 
     private void registrarVenda() {
         try {
+            // Tranformar os valores vazios em Null
             String pagamento = stringOrNull(getSelectedButtonText(grupoPagamento));
             String vendedor = stringOrNull(getSelectedButtonText(grupoVendedor));
             String quantidade = stringOrNull(txtQuantidade.getText());
             String produto = stringOrNull(txtProduto.getText());
             String preco = stringOrNull(txtPreco.getText());
 
+            // Registrar Venda enviado dados ao controller
             VendaController vendaController = new VendaController();
             vendaController.registrarVenda(pagamento, vendedor, quantidade, produto, preco);
 
+            // Limpar campos e mandar mensagem de sucesso
             JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-            // Limpa os campos e volta o foco para o primeiro campo (Produto)
             txtQuantidade.setText("");
             txtPreco.setText("");
             txtProduto.setText("");
-            txtTotal.setText("");
+            txtTotal.setText("R$ 0,00");
             txtProduto.requestFocusInWindow();
-
         } catch (Exception e) {
             MensagemErro mensagemErro = new MensagemErro(e);
             JOptionPane.showMessageDialog(this, mensagemErro.getMensagem(), "Erro", JOptionPane.ERROR_MESSAGE);
