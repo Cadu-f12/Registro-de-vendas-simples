@@ -101,7 +101,9 @@ public class JanelaCadastroVenda extends JDialog {
 
         add(painelFormulario, BorderLayout.CENTER);
 
+        // --- CHAMADA DAS CONFIGURAÇÕES ---
         configurarCalculoAutomatico();
+        configurarNavegacaoEnter(); // Ativa o Enter como Tab
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         btnConfirmar = new JButton("Confirmar Registro");
@@ -115,6 +117,20 @@ public class JanelaCadastroVenda extends JDialog {
         painelBotoes.add(btnConfirmar);
         painelBotoes.add(btnCancelar);
         add(painelBotoes, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Configura o comportamento da tecla Enter nos campos de texto.
+     */
+    private void configurarNavegacaoEnter() {
+        // Ao apertar Enter no Produto -> vai para Quantidade
+        txtProduto.addActionListener(e -> txtQuantidade.requestFocusInWindow());
+
+        // Ao apertar Enter na Quantidade -> vai para o Preço
+        txtQuantidade.addActionListener(e -> txtPreco.requestFocusInWindow());
+
+        // Ao apertar Enter no Preço (último campo) -> Confirma a venda
+        txtPreco.addActionListener(e -> registrarVenda());
     }
 
     private void configurarCalculoAutomatico() {
@@ -148,12 +164,9 @@ public class JanelaCadastroVenda extends JDialog {
             AbstractButton button = buttons.nextElement();
             if (button.isSelected()) return button.getText();
         }
-        return null; // Retorna null se nada estiver selecionado
+        return null;
     }
 
-    /**
-     * Método auxiliar para converter Strings vazias em null.
-     */
     private String stringOrNull(String input) {
         if (input == null || input.trim().isEmpty()) {
             return null;
@@ -163,23 +176,24 @@ public class JanelaCadastroVenda extends JDialog {
 
     private void registrarVenda() {
         try {
-            // Captura e converte para NULL se estiver vazio
             String pagamento = stringOrNull(getSelectedButtonText(grupoPagamento));
             String vendedor = stringOrNull(getSelectedButtonText(grupoVendedor));
             String quantidade = stringOrNull(txtQuantidade.getText());
             String produto = stringOrNull(txtProduto.getText());
             String preco = stringOrNull(txtPreco.getText());
 
-            // Registrar venda
             VendaController vendaController = new VendaController();
             vendaController.registrarVenda(pagamento, vendedor, quantidade, produto, preco);
 
-            // Mensagem de sucesso e limpar os campos após sucesso
             JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+            // Limpa os campos e volta o foco para o primeiro campo (Produto)
             txtQuantidade.setText("");
             txtPreco.setText("");
             txtProduto.setText("");
             txtTotal.setText("");
+            txtProduto.requestFocusInWindow();
+
         } catch (Exception e) {
             MensagemErro mensagemErro = new MensagemErro(e);
             JOptionPane.showMessageDialog(this, mensagemErro.getMensagem(), "Erro", JOptionPane.ERROR_MESSAGE);

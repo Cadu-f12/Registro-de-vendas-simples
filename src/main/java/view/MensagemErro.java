@@ -19,7 +19,7 @@ public class MensagemErro {
             if (e.getMessage().contains("nome")) {
                 return "Nome do produto não informado!" + padronizacao;
             }
-            if (e.getMessage().contains("preco")) {
+            if (e.getMessage().contains("preço")) {
                 return "Preço do produto não informado!" + padronizacao;
             }
             if (e.getMessage().contains("tipo de pagamento")) {
@@ -51,7 +51,7 @@ public class MensagemErro {
             if (e.getMessage().contains("nome")) {
                 return "Nome muito grande ou pequeno" + padronizacao;
             }
-            if (e.getMessage().contains(("preco"))) {
+            if (e.getMessage().contains(("preço"))) {
                 return "Preço com o valor abaixo ou acima do limite" + padronizacao;
             }
 

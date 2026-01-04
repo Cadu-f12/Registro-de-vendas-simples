@@ -51,7 +51,7 @@ public class Produto {
     }
     private void validarPrecoZerado(BigDecimal preco) {
         if (preco.compareTo(BigDecimal.ZERO) < 0 || preco.compareTo(new BigDecimal("9999.00")) >= 0) {
-            throw new AtributoForaDoIntervaloException("preco inválido: preco < 0 ou >= 9999.00");
+            throw new AtributoForaDoIntervaloException("preço inválido: preco < 0 ou >= 9999.00");
         }
     }
 
