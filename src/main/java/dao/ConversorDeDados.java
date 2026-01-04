@@ -7,24 +7,33 @@ import model.venda.Vendedor;
 import java.sql.Date;
 import java.time.LocalDate;
 
-public class ConversorVenda {
+public class ConversorDeDados {
     private final Date novaData;
     private final String novoPagamento;
     private final String novoVendedor;
 
-    public ConversorVenda(Venda venda) {
+    public ConversorDeDados(Venda venda) {
         this.novaData = converterData(venda.getData());
         this.novoPagamento = converterPagamento(venda.getFormaPagamento());
         this.novoVendedor = converterVendedor(venda.getNomeVendedor());
     }
 
     public Date converterData(LocalDate data) {
+        if (data == null) {
+            return null;
+        }
         return Date.valueOf(data);
     }
     public String converterPagamento(Pagamento pagamento) {
+        if (pagamento == null) {
+            return null;
+        }
         return pagamento.name();
     }
     public String converterVendedor(Vendedor vendedor) {
+        if (vendedor == null) {
+            return null;
+        }
         return vendedor.toString();
     }
 

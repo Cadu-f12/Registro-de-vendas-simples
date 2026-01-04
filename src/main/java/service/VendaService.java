@@ -8,18 +8,15 @@ import java.time.LocalDate;
 
 public class VendaService {
 
-    public void registrarVenda(Pagamento formaPagamento, Vendedor vendedor, int quantidade, String nomeProduto, BigDecimal preco) {
+    public void registrarVenda(Pagamento inPagamento, Vendedor inVendedor, int inQuantidade, String inProduto, BigDecimal inPreco) {
+        // Criar modelo
+        Quantidade quantidade = new Quantidade(inQuantidade);
+        Produto produto = new Produto(inProduto, inPreco);
+        DataVenda data = new DataVenda(LocalDate.now());
+        Total total = new Total(quantidade, produto);
+        Venda venda = new Venda(null, data, inPagamento, inVendedor, quantidade, produto, total);
+        // Enviar modelo ao DAO
         VendaDAO vendaDAO = new VendaDAO();
-        try {
-            Produto produtoValue = new Produto(nomeProduto, preco);
-            Quantidade quantidadeValue = new Quantidade(quantidade);
-
-            Venda venda = new Venda(null, new DataVenda(LocalDate.now()), formaPagamento, vendedor, quantidadeValue, produtoValue, new Total(quantidadeValue, produtoValue));
-            vendaDAO.registrarVenda(venda);
-        } catch (AtributoVazioException | AtributoForaDoIntervaloException | DataNoFuturoException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro genérico: " + e.getMessage());
-        }
+        vendaDAO.registrarVenda(venda);
     }
 }

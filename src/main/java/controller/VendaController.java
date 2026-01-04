@@ -7,19 +7,21 @@ import service.VendaService;
 import java.math.BigDecimal;
 
 public class VendaController {
-
-    public void registrarVenda(String pagamento, String vendedor, String quantidade, String nomeProduto, String preco) {
-        // Tratar exceções
-        // Tratar mensagens vindas do service
-
-        Pagamento novoPagamento = Pagamento.valueOf(pagamento);
-        Vendedor novoVendedor = Vendedor.valueOf(vendedor);
-        int novaQuantidade = Integer.parseInt(quantidade);
-        String novoNomeProduto = nomeProduto.trim().toLowerCase();
-        BigDecimal novoPreco = new BigDecimal(preco);
-
+    public void registrarVenda(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
+        // Normalizar dados
+        NormalizadorVenda normalizador = new NormalizadorVenda(
+                inPagamento, inVendedor, inQuantidade, inProduto, inPreco
+        );
+        // Converter dados
+        ConversorDeRegistro conversor = new ConversorDeRegistro(
+                normalizador.getPagamento(), normalizador.getVendedor(),
+                normalizador.getQuantidade(), normalizador.getProduto(), normalizador.getPreco()
+        );
+        // Enviar dados normalizados e convertidos ao service
         VendaService vendaService = new VendaService();
-        vendaService.registrarVenda(novoPagamento, novoVendedor, novaQuantidade, novoNomeProduto, novoPreco);
+        vendaService.registrarVenda(
+                conversor.getPagamento(), conversor.getVendedor(),
+                conversor.getQuantidade(), conversor.getProduto(), conversor.getPreco()
+        );
     }
-
 }

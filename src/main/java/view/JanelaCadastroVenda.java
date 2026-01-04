@@ -7,86 +7,107 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.Enumeration;
 
 public class JanelaCadastroVenda extends JDialog {
 
-    // Adicionei o txtTotal aqui
-    private JTextField txtFormaPagamento, txtVendedor, txtQuantidade, txtProduto, txtPreco, txtTotal;
+    private JTextField txtQuantidade, txtProduto, txtPreco, txtTotal;
     private JButton btnConfirmar, btnCancelar;
+    private ButtonGroup grupoPagamento, grupoVendedor;
 
     public JanelaCadastroVenda(Frame parent) {
         super(parent, "Registrar Nova Venda", true);
-        setSize(900, 350); // Aumentei ligeiramente a largura para acomodar o 3º campo na linha 2
+        setSize(700, 550);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        // --- PAINEL DO FORMULÁRIO ---
         JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBorder(BorderFactory.createTitledBorder("Dados da Venda"));
         GridBagConstraints gbc = new GridBagConstraints();
 
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
-        gbc.ipady = 10;
 
-        // --- PRIMEIRA LINHA (3 campos) ---
-        // Produto
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0;
-        painelFormulario.add(new JLabel("Produto:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
+        // 1. FORMA DE PAGAMENTO
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Forma de Pagamento:"), gbc);
+
+        JPanel pnlPagamento = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        grupoPagamento = new ButtonGroup();
+        String[] opcoesPagamento = {"PIX", "Dinheiro", "Cartão de crédito", "Cartão de débito"};
+        for (String opt : opcoesPagamento) {
+            JRadioButton rb = new JRadioButton(opt);
+            grupoPagamento.add(rb);
+            pnlPagamento.add(rb);
+            if(opt.equals("PIX")) rb.setSelected(true);
+        }
+        gbc.gridy = 1;
+        painelFormulario.add(pnlPagamento, gbc);
+
+        // 2. VENDEDOR
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Vendedor que fez a venda:"), gbc);
+
+        JPanel pnlVendedor = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        grupoVendedor = new ButtonGroup();
+        String[] vendedores = {"Carlos", "Viviane", "Helena"};
+        for (String v : vendedores) {
+            JRadioButton rb = new JRadioButton(v);
+            grupoVendedor.add(rb);
+            pnlVendedor.add(rb);
+            if(v.equals("Carlos")) rb.setSelected(true);
+        }
+        gbc.gridy = 3;
+        painelFormulario.add(pnlVendedor, gbc);
+
+        // 3. PRODUTO
+        gbc.gridx = 0; gbc.gridy = 4;
+        painelFormulario.add(new JLabel("Nome do produto:"), gbc);
+        gbc.gridy = 5;
         txtProduto = new JTextField();
         painelFormulario.add(txtProduto, gbc);
 
-        // Vendedor
-        gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0;
-        painelFormulario.add(new JLabel("Vendedor:"), gbc);
-        gbc.gridx = 3; gbc.gridy = 0; gbc.weightx = 1.0;
-        txtVendedor = new JTextField();
-        painelFormulario.add(txtVendedor, gbc);
+        // 4. QUANTIDADE E PREÇO
+        JPanel pnlNumerico = new JPanel(new GridLayout(2, 2, 10, 5));
+        pnlNumerico.add(new JLabel("Quantidade que foi vendida:"));
+        pnlNumerico.add(new JLabel("Preço do produto:"));
 
-        // Quantidade
-        gbc.gridx = 4; gbc.gridy = 0; gbc.weightx = 0;
-        painelFormulario.add(new JLabel("Quantidade:"), gbc);
-        gbc.gridx = 5; gbc.gridy = 0; gbc.weightx = 0.5;
         txtQuantidade = new JTextField();
-        painelFormulario.add(txtQuantidade, gbc);
-
-        // --- SEGUNDA LINHA (Agora com 3 campos) ---
-        // Forma de Pagamento
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
-        painelFormulario.add(new JLabel("Forma de pagamento:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
-        txtFormaPagamento = new JTextField();
-        painelFormulario.add(txtFormaPagamento, gbc);
-
-        // Preço do Produto
-        gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0;
-        painelFormulario.add(new JLabel("Preço do produto:"), gbc);
-        gbc.gridx = 3; gbc.gridy = 1; gbc.weightx = 1.0;
         txtPreco = new JTextField();
-        painelFormulario.add(txtPreco, gbc);
+        pnlNumerico.add(txtQuantidade);
+        pnlNumerico.add(txtPreco);
 
-        // --- NOVO CAMPO: Total ---
-        gbc.gridx = 4; gbc.gridy = 1; gbc.weightx = 0; // Peso 0 para a Label
-        painelFormulario.add(new JLabel("Total:"), gbc);
-        gbc.gridx = 5; gbc.gridy = 1; gbc.weightx = 0.5; // Peso 0.5 para alinhar com Quantidade
-        txtTotal = new JTextField();
-        txtTotal.setEditable(false); // O usuário não pode digitar aqui, é automático
-        txtTotal.setFocusable(false); // Pula esse campo ao usar TAB
-        painelFormulario.add(txtTotal, gbc);
+        gbc.gridy = 6;
+        painelFormulario.add(pnlNumerico, gbc);
+
+        // 5. TOTAL
+        JPanel pnlTotal = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel lblTotal = new JLabel("Total: ");
+        lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
+        txtTotal = new JTextField(10);
+        txtTotal.setEditable(false);
+        txtTotal.setFocusable(false);
+        txtTotal.setHorizontalAlignment(JTextField.CENTER);
+        txtTotal.setFont(new Font("Arial", Font.BOLD, 18));
+        txtTotal.setBackground(new Color(230, 230, 230));
+
+        pnlTotal.add(lblTotal);
+        pnlTotal.add(txtTotal);
+
+        gbc.gridy = 7;
+        gbc.insets = new Insets(20, 10, 10, 10);
+        painelFormulario.add(pnlTotal, gbc);
 
         add(painelFormulario, BorderLayout.CENTER);
 
-        // --- CONFIGURAÇÃO DOS LISTENERS PARA CÁLCULO AUTOMÁTICO ---
+        // --- CHAMADA DAS CONFIGURAÇÕES ---
         configurarCalculoAutomatico();
+        configurarNavegacaoEnter(); // Ativa o Enter como Tab
 
-
-        // --- PAINEL INFERIOR (BOTÕES CENTRALIZADOS) ---
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         btnConfirmar = new JButton("Confirmar Registro");
         btnCancelar = new JButton("Cancelar Registro");
-
         btnConfirmar.setPreferredSize(new Dimension(180, 40));
         btnCancelar.setPreferredSize(new Dimension(180, 40));
 
@@ -95,81 +116,87 @@ public class JanelaCadastroVenda extends JDialog {
 
         painelBotoes.add(btnConfirmar);
         painelBotoes.add(btnCancelar);
-
         add(painelBotoes, BorderLayout.SOUTH);
     }
 
     /**
-     * Configura os "ouvintes" nos campos de Quantidade e Preço.
-     * Sempre que algo for digitado neles, o cálculo do total será acionado.
+     * Configura o comportamento da tecla Enter nos campos de texto.
      */
-    private void configurarCalculoAutomatico() {
-        // Cria um ouvinte genérico que chama o método calcularTotal()
-        DocumentListener documentListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) { calcularTotal(); }
-            @Override
-            public void removeUpdate(DocumentEvent e) { calcularTotal(); }
-            @Override
-            public void changedUpdate(DocumentEvent e) { calcularTotal(); }
-        };
+    private void configurarNavegacaoEnter() {
+        // Ao apertar Enter no Produto -> vai para Quantidade
+        txtProduto.addActionListener(e -> txtQuantidade.requestFocusInWindow());
 
-        // Adiciona esse ouvinte aos documentos dos campos de texto
+        // Ao apertar Enter na Quantidade -> vai para o Preço
+        txtQuantidade.addActionListener(e -> txtPreco.requestFocusInWindow());
+
+        // Ao apertar Enter no Preço (último campo) -> Confirma a venda
+        txtPreco.addActionListener(e -> registrarVenda());
+    }
+
+    private void configurarCalculoAutomatico() {
+        DocumentListener documentListener = new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { calcularTotal(); }
+            @Override public void removeUpdate(DocumentEvent e) { calcularTotal(); }
+            @Override public void changedUpdate(DocumentEvent e) { calcularTotal(); }
+        };
         txtQuantidade.getDocument().addDocumentListener(documentListener);
         txtPreco.getDocument().addDocumentListener(documentListener);
     }
 
-    /**
-     * Realiza a matemática: Pega os textos, converte para números, multiplica e formata.
-     */
     private void calcularTotal() {
         try {
-            // Pega o texto e substitui vírgula por ponto para garantir que o Java entenda como número decimal
             String qtdStr = txtQuantidade.getText().replace(",", ".");
             String precoStr = txtPreco.getText().replace(",", ".");
-
-            // Se algum campo estiver vazio, não calcula e limpa o total
             if (qtdStr.isEmpty() || precoStr.isEmpty()) {
                 txtTotal.setText("");
                 return;
             }
-
-            // Converte para double (número decimal)
-            double quantidade = Double.parseDouble(qtdStr);
-            double preco = Double.parseDouble(precoStr);
-
-            // Calcula
-            double total = quantidade * preco;
-
-            // Formata o resultado para 2 casas decimais (padrão monetário)
-            DecimalFormat df = new DecimalFormat("#,##0.00");
+            double total = Double.parseDouble(qtdStr) * Double.parseDouble(precoStr);
+            DecimalFormat df = new DecimalFormat("R$ #,##0.00");
             txtTotal.setText(df.format(total));
-
         } catch (NumberFormatException ex) {
-            // Se o usuário digitar letras ou algo inválido, limpa o total ou mostra erro
-            txtTotal.setText("Erro no valor");
+            txtTotal.setText("Erro");
         }
+    }
+
+    private String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) return button.getText();
+        }
+        return null;
+    }
+
+    private String stringOrNull(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return null;
+        }
+        return input.trim();
     }
 
     private void registrarVenda() {
         try {
+            String pagamento = stringOrNull(getSelectedButtonText(grupoPagamento));
+            String vendedor = stringOrNull(getSelectedButtonText(grupoVendedor));
+            String quantidade = stringOrNull(txtQuantidade.getText());
+            String produto = stringOrNull(txtProduto.getText());
+            String preco = stringOrNull(txtPreco.getText());
+
             VendaController vendaController = new VendaController();
+            vendaController.registrarVenda(pagamento, vendedor, quantidade, produto, preco);
 
-            vendaController.registrarVenda(txtFormaPagamento.getText(), txtVendedor.getText(), txtQuantidade.getText(), txtProduto.getText(), txtPreco.getText());
+            JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Venda registrada com sucesso!",
-                    "Sucesso",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            // Limpa os campos e volta o foco para o primeiro campo (Produto)
+            txtQuantidade.setText("");
+            txtPreco.setText("");
+            txtProduto.setText("");
+            txtTotal.setText("");
+            txtProduto.requestFocusInWindow();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Erro ao registrar a venda.\n" + e.getMessage(),
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            MensagemErro mensagemErro = new MensagemErro(e);
+            JOptionPane.showMessageDialog(this, mensagemErro.getMensagem(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
