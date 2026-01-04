@@ -19,12 +19,21 @@ public class ConversorDeDados {
     }
 
     public Date converterData(LocalDate data) {
+        if (data == null) {
+            return null;
+        }
         return Date.valueOf(data);
     }
     public String converterPagamento(Pagamento pagamento) {
+        if (pagamento == null) {
+            return null;
+        }
         return pagamento.name();
     }
     public String converterVendedor(Vendedor vendedor) {
+        if (vendedor == null) {
+            return null;
+        }
         return vendedor.toString();
     }
 
