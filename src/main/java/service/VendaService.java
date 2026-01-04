@@ -5,6 +5,7 @@ import model.venda.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class VendaService {
 
@@ -18,5 +19,14 @@ public class VendaService {
         // Enviar modelo ao DAO
         VendaDAO vendaDAO = new VendaDAO();
         vendaDAO.registrarVenda(venda);
+    }
+
+    public ArrayList<Venda> carregarDados(LocalDate inData) {
+        // Criar modelo somente com a data
+        DataVenda data = new DataVenda(inData);
+        Venda venda = new Venda(null, data, null, null, null, null, null);
+        // Enviar modelo ao DAO
+        VendaDAO vendaDAO = new VendaDAO();
+        return vendaDAO.carregarDados(venda);
     }
 }
