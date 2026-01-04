@@ -25,7 +25,7 @@ public class Produto {
         validarTamanhoNome(nome);
 
         this.nome = nome;
-        this.preco = BigDecimal.ZERO;
+        this.preco = null;
     }
 
     private void validarSimbulos(String nome) {

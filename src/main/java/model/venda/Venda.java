@@ -49,4 +49,17 @@ public class Venda {
     public BigDecimal getTotal() {
         return this.total.getTotal();
     }
+
+    @Override
+    public String toString() {
+        return "Venda{" +
+                "id=" + id +
+                ", data=" + data +
+                ", formaPagamento=" + formaPagamento +
+                ", nomeVendedor=" + nomeVendedor +
+                ", quantidade=" + quantidade +
+                ", produto=" + produto +
+                ", total=" + total +
+                '}';
+    }
 }
