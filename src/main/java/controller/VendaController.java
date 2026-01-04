@@ -1,15 +1,14 @@
 package controller;
 
-import model.venda.Pagamento;
-import model.venda.Vendedor;
+import model.venda.Venda;
 import service.VendaService;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class VendaController {
     public void registrarVenda(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
         // Normalizar dados
-        NormalizadorVenda normalizador = new NormalizadorVenda(
+        NormalizadorRegistro normalizador = new NormalizadorRegistro(
                 inPagamento, inVendedor, inQuantidade, inProduto, inPreco
         );
         // Converter dados
@@ -23,5 +22,15 @@ public class VendaController {
                 conversor.getPagamento(), conversor.getVendedor(),
                 conversor.getQuantidade(), conversor.getProduto(), conversor.getPreco()
         );
+    }
+
+    public ArrayList<Venda> carregarDados(String inData) {
+        // Normalizar data na forma normal
+        NormalizadorCaptura normalizador = new NormalizadorCaptura(inData);
+        // Converter data para localDate
+        ConversorDeCaptura conversor = new ConversorDeCaptura(normalizador.getData());
+        // Enviar data normalizada e convertida ao service e logo em seguida dar retorno dos dados
+        VendaService vendaService = new VendaService();
+        return vendaService.carregarDados(conversor.getData());
     }
 }

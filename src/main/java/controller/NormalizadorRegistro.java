@@ -2,14 +2,14 @@ package controller;
 
 import java.text.Normalizer;
 
-public class NormalizadorVenda {
+public class NormalizadorRegistro {
     private final String pagamento;
     private final String vendedor;
     private final String quantidade;
     private final String produto;
     private final String preco;
 
-    public NormalizadorVenda(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
+    public NormalizadorRegistro(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
         /*
         Adaptar Enum, remover acentos, substituir virgula por ponto,
         normalizar dados deixando tudo em lowerCase e tirando espaços adjacentes
