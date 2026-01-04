@@ -1,10 +1,12 @@
 package dao;
 
-import model.venda.Venda;
+import model.venda.*;
 import util.Conexao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class VendaDAO {
 
@@ -26,6 +28,39 @@ public class VendaDAO {
             pstmt.setBigDecimal(6, venda.getTotal());
 
             pstmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Venda> carregarDados(Venda venda) {
+        // Converter data para o tipo do banco de dados
+        ConversorDeDados conversorDeDados = new ConversorDeDados(venda);
+        ArrayList<Venda> vendas = new ArrayList<>();
+        Venda registro;
+
+        String sql = """
+                    SELECT * FROM vendas
+                    WHERE data_registro = ?""";
+
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDate(1, conversorDeDados.getNovaData());
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Id id = new Id(rs.getInt("id_venda"));
+                Pagamento pagamento = Pagamento.valueOf(rs.getString("forma_pagamento"));
+                Vendedor vendedor = Vendedor.valueOf(rs.getString("nome_vendedor"));
+                Produto produto = new Produto(rs.getString("nome_produto"));
+                Quantidade quantidade = new Quantidade(rs.getInt("quantidade"));
+                Total total = new Total(rs.getBigDecimal("total"));
+                registro = new Venda(id, null, pagamento, vendedor, quantidade, produto, total);
+                vendas.add(registro);
+            }
+
+            rs.close();
+            return vendas;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,12 +1,18 @@
 package view;
 
 import com.toedter.calendar.JCalendar;
+import controller.VendaController;
+
+import model.venda.Venda;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate; // Import necessário para pegar a data atual
 import java.time.format.DateTimeFormatter; // Import para formatar a data atual
+import java.util.ArrayList;
 import java.util.Date;
 
 public class TelaRegistroVendas extends JFrame {
@@ -55,6 +61,8 @@ public class TelaRegistroVendas extends JFrame {
         modeloTabela = new DefaultTableModel(colunas, 0);
         tabelaVendas = new JTable(modeloTabela);
 
+        ajustarLayoutTabela(); // Formatação da tabela
+
         JScrollPane scrollPane = new JScrollPane(tabelaVendas);
         scrollPane.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
@@ -63,22 +71,20 @@ public class TelaRegistroVendas extends JFrame {
 
         add(scrollPane, BorderLayout.CENTER);
 
-        // --- PAINEL INFERIOR (BOTÕES) ---
+        // --- PAINEL INFERIOR (BOTÕES CENTRALIZADOS) ---
         JPanel painelInferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20));
         painelInferior.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
 
-        JButton btnCarregar = new JButton("Carregar Dados");
         JButton btnRegistrar = new JButton("Registrar");
         JButton btnDeletar = new JButton("Deletar");
         JButton btnEditar = new JButton("Editar");
 
         Dimension dimBotao = new Dimension(160, 45);
-        btnCarregar.setPreferredSize(dimBotao);
         btnRegistrar.setPreferredSize(dimBotao);
         btnDeletar.setPreferredSize(dimBotao);
         btnEditar.setPreferredSize(dimBotao);
 
-        painelInferior.add(btnCarregar);
+        // Adicionando apenas os botões de ação
         painelInferior.add(btnRegistrar);
         painelInferior.add(btnDeletar);
         painelInferior.add(btnEditar);
@@ -86,10 +92,12 @@ public class TelaRegistroVendas extends JFrame {
         add(painelInferior, BorderLayout.SOUTH);
 
         // Ações
-        btnCarregar.addActionListener(e -> carregarDados());
         btnRegistrar.addActionListener(e -> registrarVenda());
         btnDeletar.addActionListener(e -> deletarVenda());
         btnEditar.addActionListener(e -> editarVenda());
+
+        // --- CARREGAMENTO AUTOMÁTICO INICIAL ---
+        carregarDados();
     }
 
     private void abrirCalendario() {
@@ -105,6 +113,9 @@ public class TelaRegistroVendas extends JFrame {
             SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yy");
             txtData.setText(formatador.format(dataSelecionada));
             dialog.dispose();
+
+            // Atualiza automaticamente ao trocar a data
+            carregarDados();
         });
 
         JPanel painelBotoes = new JPanel();
@@ -114,10 +125,64 @@ public class TelaRegistroVendas extends JFrame {
         dialog.setVisible(true);
     }
 
-    private void carregarDados() { System.out.println("Carregando registros de: " + txtData.getText()); }
-    private void registrarVenda() { new JanelaCadastroVenda(this).setVisible(true); }
-    private void deletarVenda() { new JanelaDeletarVenda(this).setVisible(true); }
-    private void editarVenda() { new JanelaEditarVenda(this).setVisible(true); }
+    private void carregarDados() {
+        try {
+            VendaController vendaController = new VendaController();
+            ArrayList<Venda> vendas = vendaController.carregarDados(txtData.getText());
+
+            modeloTabela.setRowCount(0);
+
+            for (Venda v : vendas) {
+                Object[] linha = {
+                        v.getId(),
+                        v.getFormaPagamento(),
+                        v.getNomeVendedor(),
+                        v.getQuantidade(),
+                        v.getNomeProduto(),
+                        new java.text.DecimalFormat("R$ #,##0.00").format(v.getTotal())
+                };
+                modeloTabela.addRow(linha);
+            }
+
+        } catch (Exception e) {
+            MensagemErro mensagemErro = new MensagemErro(e);
+            JOptionPane.showMessageDialog(this, mensagemErro.getMensagem(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void registrarVenda() {
+        new JanelaCadastroVenda(this).setVisible(true);
+        carregarDados();
+    }
+
+    private void deletarVenda() {
+        new JanelaDeletarVenda(this).setVisible(true);
+        carregarDados();
+    }
+
+    private void editarVenda() {
+        new JanelaEditarVenda(this).setVisible(true);
+        carregarDados();
+    }
+
+    private void ajustarLayoutTabela() {
+        tabelaVendas.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tabelaVendas.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tabelaVendas.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tabelaVendas.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tabelaVendas.getColumnModel().getColumn(4).setPreferredWidth(250);
+        tabelaVendas.getColumnModel().getColumn(5).setPreferredWidth(100);
+
+        DefaultTableCellRenderer centralizado = new DefaultTableCellRenderer();
+        centralizado.setHorizontalAlignment(JLabel.CENTER);
+
+        DefaultTableCellRenderer aDireita = new DefaultTableCellRenderer();
+        aDireita.setHorizontalAlignment(JLabel.RIGHT);
+
+        tabelaVendas.getColumnModel().getColumn(0).setCellRenderer(centralizado);
+        tabelaVendas.getColumnModel().getColumn(3).setCellRenderer(centralizado);
+        tabelaVendas.getColumnModel().getColumn(5).setCellRenderer(aDireita);
+    }
 
     public static void main(String[] args) {
         try {
