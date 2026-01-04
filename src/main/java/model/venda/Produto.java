@@ -18,6 +18,15 @@ public class Produto {
         this.nome = nome;
         this.preco = preco;
     }
+    public Produto(String nome) {
+        // Validações nome do produto
+        validarNomeVazio(nome);
+        validarSimbulos(nome);
+        validarTamanhoNome(nome);
+
+        this.nome = nome;
+        this.preco = BigDecimal.ZERO;
+    }
 
     private void validarSimbulos(String nome) {
         if(!nome.matches("^[a-z ]+$")) {

@@ -15,8 +15,8 @@ public class Venda {
     public Venda(Id id, DataVenda data, Pagamento formaPagamento, Vendedor nomeVendedor, Quantidade quantidade, Produto produto, Total total) {
         this.id = id;
         this.data = data;
-        this.formaPagamento = Pagamento.validar(formaPagamento);
-        this.nomeVendedor = Vendedor.validar(nomeVendedor);
+        this.formaPagamento = formaPagamento;
+        this.nomeVendedor = nomeVendedor;
         this.quantidade = quantidade;
         this.produto = produto;
         this.total = total;
