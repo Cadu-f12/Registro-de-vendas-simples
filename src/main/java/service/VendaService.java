@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class VendaService {
 
     public void registrarVenda(Pagamento inPagamento, Vendedor inVendedor, int inQuantidade, String inProduto, BigDecimal inPreco) {
-        // Criar modelo
+        // Criar modelo completo
         Quantidade quantidade = new Quantidade(inQuantidade);
         Produto produto = new Produto(inProduto, inPreco);
         DataVenda data = new DataVenda(LocalDate.now());
@@ -28,5 +28,14 @@ public class VendaService {
         // Enviar modelo ao DAO
         VendaDAO vendaDAO = new VendaDAO();
         return vendaDAO.carregarDados(venda);
+    }
+
+    public void deletarVenda(int inId) {
+        // Criar modelo apenas com Id
+        Id id = new Id(inId);
+        Venda venda = new Venda(id, null, null, null, null, null, null);
+        // Enviar modelo ao DAO
+        VendaDAO vendaDAO = new VendaDAO();
+        vendaDAO.deletarVenda(venda);
     }
 }
