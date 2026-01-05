@@ -1,9 +1,6 @@
 package view;
 
-import model.venda.AtributoComSimbulosException;
-import model.venda.AtributoForaDoIntervaloException;
-import model.venda.AtributoVazioException;
-import model.venda.DataNoFuturoException;
+import model.venda.*;
 
 public class MensagemErro {
     private final String Mensagem;
@@ -55,13 +52,19 @@ public class MensagemErro {
                 return "Preço com o valor abaixo ou acima do limite" + padronizacao;
             }
 
-            return "Algum valor abaixo ou acima do limite";
+            return "Algum valor abaixo ou acima do limite" + padronizacao;
         }
         //Para datas inseridas no futuro
         if (e instanceof DataNoFuturoException) {
             if (e.getMessage().contains("data")) {
                 return "Data informada no futuro!" + padronizacao;
             }
+        }
+        if (e instanceof AtributoNaoEncontradoException) {
+            if (e.getMessage().contains("id_venda")) {
+                return "ID não encontrado no sistema!" + padronizacao;
+            }
+            return "Algum atributo não encontrado" + padronizacao;
         }
         return e.getMessage();
     }

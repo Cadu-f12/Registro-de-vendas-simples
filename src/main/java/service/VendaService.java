@@ -33,6 +33,7 @@ public class VendaService {
     public void deletarVenda(int inId) {
         // Criar modelo apenas com Id
         Id id = new Id(inId);
+        id.verificarExistenciaId();
         Venda venda = new Venda(id, null, null, null, null, null, null);
         // Enviar modelo ao DAO
         VendaDAO vendaDAO = new VendaDAO();

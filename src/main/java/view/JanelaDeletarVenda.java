@@ -69,8 +69,6 @@ public class JanelaDeletarVenda extends JDialog {
                 }
             }
 
-            // todo - CRIAR VALIDAÇÃO DE ID INVÁLIDO/NÃO ENCONTRADO
-
             // Deletar venda
             VendaController vendaController = new VendaController();
             vendaController.deletarVenda(IdExcluir);
