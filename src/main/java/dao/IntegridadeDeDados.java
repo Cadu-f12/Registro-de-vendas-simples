@@ -17,7 +17,7 @@ public class IntegridadeDeDados {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
 
-
+            rs.next();
             int result = rs.getInt("n");
             rs.close();
             return result;
