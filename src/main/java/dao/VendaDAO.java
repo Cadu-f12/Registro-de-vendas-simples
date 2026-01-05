@@ -65,4 +65,18 @@ public class VendaDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public void deletarVenda(Venda venda) {
+        String sql = """
+                    DELETE FROM vendas
+                    WHERE id_venda = ?""";
+
+        try (Connection conn = Conexao.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, venda.getId());
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
