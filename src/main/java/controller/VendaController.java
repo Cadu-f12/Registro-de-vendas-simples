@@ -1,5 +1,6 @@
 package controller;
 
+import dao.VendaDAO;
 import model.venda.Venda;
 import service.VendaService;
 
@@ -32,5 +33,13 @@ public class VendaController {
         // Enviar data normalizada e convertida ao service e logo em seguida dar retorno dos dados
         VendaService vendaService = new VendaService();
         return vendaService.carregarDados(conversor.getData());
+    }
+
+    public void deletarVenda(String id) {
+        // Converter dados
+        ConversorDeId conversor = new ConversorDeId(id);
+        // Enviar id normalizado ao service
+        VendaService vendaService = new VendaService();
+        vendaService.deletarVenda(conversor.getId());
     }
 }
