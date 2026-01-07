@@ -17,14 +17,9 @@ public class Id {
     }
 
     public void verificarExistenciaId() {
-        // validar se há no atributo valor
-        if (this.id == 0) {
-            System.err.println("Impossível fazer verificação: id zerado");
-            return;
-        }
         // Chamar classe responsável por verificar o banco de dados
         IntegridadeDeDados integridade = new IntegridadeDeDados();
-        int resultado = integridade.verificarExistenciaId(id);
+        int resultado = integridade.consultarExistenciaId(id);
         // Disparar exceção caso seja encontrado o problema
         if (resultado == 0) {
             throw new AtributoNaoEncontradoException("id_venda inválido: id não encontrado no banco de dados");

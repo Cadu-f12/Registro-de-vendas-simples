@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class IntegridadeDeDados {
 
-    public int verificarExistenciaId(int id) {
+    public int consultarExistenciaId(int id) {
         String sql = """
                     SELECT COUNT(*) AS n FROM vendas
                     WHERE id_venda = ?""";
