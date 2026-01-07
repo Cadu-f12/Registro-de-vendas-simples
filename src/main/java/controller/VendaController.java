@@ -36,6 +36,8 @@ public class VendaController {
     }
 
     public void deletarVenda(String id) {
+        //Normalizar Id
+        NormalizadorId normalizadorId = new NormalizadorId(id);
         // Converter dados
         ConversorDeId conversor = new ConversorDeId(id);
         // Enviar id normalizado ao service

@@ -10,7 +10,7 @@ public class JanelaDeletarVenda extends JDialog {
     private JTextField txtIdExcluir;
     private JButton btnConfirmar, btnCancelar;
 
-    public JanelaDeletarVenda(Frame parent) {
+    public JanelaDeletarVenda(Frame parent, String idSelecionado) {
         super(parent, "Excluir Registro de Venda", true);
         setSize(600, 300); // Resolução mantida conforme solicitado
         setLocationRelativeTo(parent);
@@ -32,7 +32,7 @@ public class JanelaDeletarVenda extends JDialog {
         // Campo para o ID (Mantendo apenas o preenchimento de altura aprovado antes)
         gbc.gridx = 0; gbc.gridy = 1;
         gbc.ipady = 15;
-        txtIdExcluir = new JTextField();
+        txtIdExcluir = new JTextField(idSelecionado);
         painelCentral.add(txtIdExcluir, gbc);
 
         add(painelCentral, BorderLayout.CENTER);
