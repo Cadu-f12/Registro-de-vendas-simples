@@ -156,7 +156,15 @@ public class TelaRegistroVendas extends JFrame {
     }
 
     private void deletarVenda() {
-        new JanelaDeletarVenda(this).setVisible(true);
+        int linhaSelecionada = tabelaVendas.getSelectedRow();
+        String idParaDeletar = "";
+
+        if (linhaSelecionada != -1) {
+            // Pegamos o valor da coluna 0 (ID) e transformamos em String
+            idParaDeletar = tabelaVendas.getValueAt(linhaSelecionada, 0).toString();
+        }
+
+        new JanelaDeletarVenda(this, idParaDeletar).setVisible(true);
         carregarDados();
     }
 
