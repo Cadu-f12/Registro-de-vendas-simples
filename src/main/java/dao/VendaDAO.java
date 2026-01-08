@@ -6,6 +6,7 @@ import util.Conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class VendaDAO {
@@ -61,6 +62,35 @@ public class VendaDAO {
 
             rs.close();
             return vendas;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Venda carregarVenda(Venda venda) {
+        String sql = """
+                    SELECT * FROM venda
+                    WHERE id_venda = ?""";
+        Venda registro = null;
+
+        try (Connection conn = Conexao.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, venda.getId());
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Id id_venda = new Id(rs.getInt("id_venda"));
+                java.sql.Date sqlDate = rs.getDate("nome_da_coluna");
+                DataVenda dataVenda = new DataVenda(sqlDate.toLocalDate());
+                Pagamento pagamento = Pagamento.valueOf(rs.getString("forma_pagamento"));
+                Vendedor vendedor = Vendedor.valueOf(rs.getString("nome_vendedor"));
+                Produto produto = new Produto(rs.getString("nome_produto"));
+                Quantidade quantidade = new Quantidade(rs.getInt("quantidade"));
+                Total total = new Total(rs.getBigDecimal("total"));
+                registro = new Venda(id_venda, dataVenda, pagamento, vendedor, quantidade, produto, total);
+            }
+
+            return registro;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
