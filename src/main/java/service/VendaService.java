@@ -30,6 +30,16 @@ public class VendaService {
         return vendaDAO.carregarDados(venda);
     }
 
+    public Venda carregarVenda(int inId) {
+        // Criar modelo apenas com o id
+        Id id = new Id(inId);
+        id.verificarExistenciaId();
+        Venda venda = new Venda(id, null, null, null, null, null, null);
+        // Enviar ao DAO
+        VendaDAO vendaDAO = new VendaDAO();
+        return vendaDAO.carregarVenda(venda);
+    }
+
     public void deletarVenda(int inId) {
         // Criar modelo apenas com Id
         Id id = new Id(inId);

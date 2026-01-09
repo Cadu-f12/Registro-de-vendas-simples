@@ -35,11 +35,21 @@ public class VendaController {
         return vendaService.carregarDados(conversor.getData());
     }
 
+    public Venda carregarVenda(String inId) {
+        // Normalizar Id
+        NormalizadorId normalizador = new NormalizadorId(inId);
+        // Converter Id
+        ConversorDeId conversor = new ConversorDeId(normalizador.getId());
+        // Enviar Id normalizador e convertido ao service
+        VendaService vendaService = new VendaService();
+        return vendaService.carregarVenda(conversor.getId());
+    }
+
     public void deletarVenda(String id) {
         //Normalizar Id
         NormalizadorId normalizadorId = new NormalizadorId(id);
         // Converter dados
-        ConversorDeId conversor = new ConversorDeId(id);
+        ConversorDeId conversor = new ConversorDeId(normalizadorId.getId());
         // Enviar id normalizado ao service
         VendaService vendaService = new VendaService();
         vendaService.deletarVenda(conversor.getId());
