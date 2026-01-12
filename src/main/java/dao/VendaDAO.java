@@ -96,6 +96,30 @@ public class VendaDAO {
         }
     }
 
+    public void atualizarVenda(Venda inVenda) {
+        ConversorDeDados conversor = new ConversorDeDados(inVenda);
+        String sql = """
+                UPDATE vendas SET
+                data_registro = ?, forma_pagamento = ?, nome_vendedor = ?,
+                quantidade = ?, nome_produto = ?, total = ?
+                WHERE id_venda = ?;""";
+
+        try (Connection conn = Conexao.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDate(1, conversor.getNovaData());
+            pstmt.setString(2, conversor.getNovoPagamento());
+            pstmt.setString(3, conversor.getNovoVendedor());
+            pstmt.setInt(4, inVenda.getQuantidade());
+            pstmt.setString(5, inVenda.getNomeProduto());
+            pstmt.setBigDecimal(6, inVenda.getTotal());
+            pstmt.setInt(7, inVenda.getId());
+
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void deletarVenda(Venda venda) {
         String sql = """
                     DELETE FROM vendas
