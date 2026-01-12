@@ -40,6 +40,19 @@ public class VendaService {
         return vendaDAO.carregarVenda(venda);
     }
 
+    public void atualizarVenda(int inId, LocalDate inData, Pagamento inPagamento, Vendedor inVendedor, String inProduto, int inQuantidade, BigDecimal inTotal) {
+        // Criar modelo cheio
+        Id id = new Id(inId);
+        DataVenda data = new DataVenda(inData);
+        Produto produto = new Produto(inProduto);
+        Quantidade quantidade = new Quantidade(inQuantidade);
+        Total total = new Total(inTotal);
+        Venda venda = new Venda(id, data, inPagamento, inVendedor, quantidade, produto, total);
+        // Enviar ao DAO
+        VendaDAO vendaDAO = new VendaDAO();
+        vendaDAO.atualizarVenda(venda);
+    }
+
     public void deletarVenda(int inId) {
         // Criar modelo apenas com Id
         Id id = new Id(inId);
