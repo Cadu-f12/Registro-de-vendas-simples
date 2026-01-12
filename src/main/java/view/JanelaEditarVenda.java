@@ -249,7 +249,8 @@ public class JanelaEditarVenda extends JDialog {
                 tabbedPane.setSelectedIndex(1);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar: " + e.getMessage());
+            MensagemErro mensagem = new MensagemErro(e);
+            JOptionPane.showMessageDialog(this, "Erro ao carregar: " + mensagem.getMensagem());
         }
     }
 
