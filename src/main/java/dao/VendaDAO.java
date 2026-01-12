@@ -69,7 +69,7 @@ public class VendaDAO {
 
     public Venda carregarVenda(Venda venda) {
         String sql = """
-                    SELECT * FROM venda
+                    SELECT * FROM vendas
                     WHERE id_venda = ?""";
         Venda registro = null;
 
@@ -80,7 +80,7 @@ public class VendaDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Id id_venda = new Id(rs.getInt("id_venda"));
-                java.sql.Date sqlDate = rs.getDate("nome_da_coluna");
+                java.sql.Date sqlDate = rs.getDate("data_registro");
                 DataVenda dataVenda = new DataVenda(sqlDate.toLocalDate());
                 Pagamento pagamento = Pagamento.valueOf(rs.getString("forma_pagamento"));
                 Vendedor vendedor = Vendedor.valueOf(rs.getString("nome_vendedor"));
