@@ -211,7 +211,17 @@ public class JanelaEditarVenda extends JDialog {
 
     private String normalizar(String texto) {
         if (texto == null) return "";
-        return texto.toLowerCase().replace("_", " ").replaceAll("[áàâãä]", "a").replaceAll("[éèêë]", "e").replaceAll("[íìîï]", "i").replaceAll("[óòôõö]", "o").replaceAll("[úùûü]", "u").replaceAll("[ç]", "c").trim();
+        return texto.toLowerCase()
+                .replaceAll("[áàâãä]", "a")
+                .replaceAll("[éèêë]", "e")
+                .replaceAll("[íìîï]", "i")
+                .replaceAll("[óòôõö]", "o")
+                .replaceAll("[úùûü]", "u")
+                .replaceAll("[ç]", "c")
+                .replace("_", "")      // Remove o underline (cartao_credito -> cartaocredito)
+                .replace(" de ", "")   // Remove a preposição (cartao de credito -> cartaocredito)
+                .replaceAll("\\s+", "") // Remove todos os espaços restantes
+                .trim();
     }
 
     private String stringOrNull(String input) {
@@ -245,10 +255,15 @@ public class JanelaEditarVenda extends JDialog {
 
     private void selecionarRadio(ButtonGroup group, String valorBanco) {
         String valorBancoLimpo = normalizar(valorBanco);
+
         for (Enumeration<AbstractButton> buttons = group.getElements(); buttons.hasMoreElements();) {
             AbstractButton b = buttons.nextElement();
             String textoBotaoLimpo = normalizar(b.getText());
-            if (textoBotaoLimpo.contains(valorBancoLimpo) || valorBancoLimpo.contains(textoBotaoLimpo)) {
+
+            // Agora comparamos os termos "secos": cartaocredito vs cartaocredito
+            if (textoBotaoLimpo.equals(valorBancoLimpo) ||
+                    textoBotaoLimpo.contains(valorBancoLimpo) ||
+                    valorBancoLimpo.contains(textoBotaoLimpo)) {
                 b.setSelected(true);
                 break;
             }
