@@ -296,10 +296,10 @@ public class JanelaEditarVenda extends JDialog {
             // AQUI A MÁGICA: Pega "R$ 35,00" e transforma em "35,00"
             String totalParaBanco = extrairSomenteValor(txtTotal.getText());
 
-            // CHAMA SEU CONTROLLER
-            // controller.atualizarVenda(id, data, pagamento, vendedor, produto, quantidade, totalParaBanco);
+            VendaController controller = new VendaController();
+            controller.atualizarVenda(id, data, pagamento, vendedor, produto, quantidade, totalParaBanco);
 
-            JOptionPane.showMessageDialog(this, "Registro " + id + " atualizado com sucesso!");
+            JOptionPane.showMessageDialog(this, "Registro ( " + id + " ) atualizado com sucesso!");
             dispose();
 
         } catch (Exception e) {
