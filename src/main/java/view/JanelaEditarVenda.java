@@ -146,7 +146,7 @@ public class JanelaEditarVenda extends JDialog {
         txtTotal.setFont(new Font("Arial", Font.BOLD, 18));
         txtTotal.setBackground(Color.WHITE);
 
-// Aplicando a proteção do "R$ " e filtro de números
+        // Aplicando a proteção do "R$ " e filtro de números
         ((javax.swing.text.AbstractDocument) txtTotal.getDocument()).setDocumentFilter(new javax.swing.text.DocumentFilter() {
             @Override
             public void remove(FilterBypass fb, int offset, int length) throws javax.swing.text.BadLocationException {
@@ -158,7 +158,15 @@ public class JanelaEditarVenda extends JDialog {
             @Override
             public void replace(FilterBypass fb, int offset, int length, String text, javax.swing.text.AttributeSet attrs)
                     throws javax.swing.text.BadLocationException {
-                // Bloqueia editar os 3 primeiros caracteres
+
+                // NOVIDADE: Se o offset for 0 e o texto começar com "R$ ",
+                // permite a troca (isso libera o txtTotal.setText funcionar)
+                if (offset == 0 && text != null && text.startsWith("R$ ")) {
+                    super.replace(fb, offset, length, text, attrs);
+                    return;
+                }
+
+                // Bloqueia editar manualmente os 3 primeiros caracteres
                 if (offset < 3) return;
 
                 // Só permite inserir se for número ou vírgula
@@ -241,7 +249,6 @@ public class JanelaEditarVenda extends JDialog {
                 txtProduto.setText(v.getNomeProduto());
                 txtQuantidade.setText(String.valueOf(v.getQuantidade()));
                 txtTotal.setText(df.format(v.getTotal())); // Carrega formatado, mas pode ser editado
-
                 selecionarRadio(grupoPagamento, String.valueOf(v.getFormaPagamento()));
                 selecionarRadio(grupoVendedor, String.valueOf(v.getNomeVendedor()));
 
