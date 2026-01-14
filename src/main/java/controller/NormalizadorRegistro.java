@@ -8,8 +8,9 @@ public class NormalizadorRegistro {
     private final String quantidade;
     private final String produto;
     private final String preco;
+    private final String total;
 
-    public NormalizadorRegistro(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
+    public NormalizadorRegistro(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco, String inTotal) {
         /*
         Adaptar Enum, remover acentos, substituir virgula por ponto,
         normalizar dados deixando tudo em lowerCase e tirando espaços adjacentes
@@ -19,7 +20,7 @@ public class NormalizadorRegistro {
         this.quantidade = normalizarString(inQuantidade);
         this.produto = removerAcentos(normalizarString(inProduto));
         this.preco = substituirVirgula(normalizarString(inPreco));
-
+        this.total = substituirVirgula(normalizarString(inTotal));
     }
 
     private String adaptarEnum(String enumInvalido) {
@@ -76,5 +77,9 @@ public class NormalizadorRegistro {
 
     public String getPreco() {
         return preco;
+    }
+
+    public String getTotal() {
+        return total;
     }
 }

@@ -169,8 +169,12 @@ public class TelaRegistroVendas extends JFrame {
     }
 
     private void editarVenda() {
-        new JanelaEditarVenda(this).setVisible(true);
-        carregarDados();
+        int linhaSelecionada = tabelaVendas.getSelectedRow();
+        String idParaEditar = (linhaSelecionada != -1) ?
+                tabelaVendas.getValueAt(linhaSelecionada, 0).toString() : "";
+
+        new JanelaEditarVenda(this, idParaEditar).setVisible(true);
+        carregarDados(); // Atualiza a tabela após fechar
     }
 
     private void ajustarLayoutTabela() {

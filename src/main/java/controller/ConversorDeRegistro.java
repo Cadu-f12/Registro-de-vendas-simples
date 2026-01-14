@@ -11,14 +11,16 @@ public class ConversorDeRegistro {
     private final int quantidade;
     private final String produto;
     private final BigDecimal preco;
+    private final BigDecimal total;
 
-    public ConversorDeRegistro(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco) {
+    public ConversorDeRegistro(String inPagamento, String inVendedor, String inQuantidade, String inProduto, String inPreco, String inTotal) {
         // Converter todos os dados normalizados para seus tipos adequados
         this.pagamento = converterPagamento(inPagamento);
         this.vendedor = converterVendedor(inVendedor);
         this.quantidade = converterQuantidade(inQuantidade);
         this.produto = inProduto;
-        this.preco = converterPreco(inPreco);
+        this.preco = converterValorMonetario(inPreco);
+        this.total = converterValorMonetario(inTotal);
     }
 
     private Pagamento converterPagamento(String pagamento) {
@@ -39,11 +41,11 @@ public class ConversorDeRegistro {
         }
         return Integer.parseInt(quantidade);
     }
-    private BigDecimal converterPreco(String preco) {
-        if (preco == null) {
+    private BigDecimal converterValorMonetario(String valor) {
+        if (valor == null) {
             return null;
         }
-        return new BigDecimal(preco);
+        return new BigDecimal(valor);
     }
 
     public Pagamento getPagamento() {
@@ -64,5 +66,9 @@ public class ConversorDeRegistro {
 
     public BigDecimal getPreco() {
         return preco;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
     }
 }

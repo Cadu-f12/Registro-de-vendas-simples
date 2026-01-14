@@ -13,4 +13,8 @@ public class NormalizadorId {
         }
         return id.trim();
     }
+
+    public String getId() {
+        return id;
+    }
 }
